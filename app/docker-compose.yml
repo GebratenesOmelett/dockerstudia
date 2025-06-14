@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER:   user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB:     submissions
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    build: ./app
+    restart: always
+    ports:
+      - "80:5000"
+    environment:
+      FLASK_ENV:       production
+      DB_HOST:         db
+      DB_NAME:         submissions
+      DB_USER:         user
+      DB_PASS:         password
+      FORM_PASSWORD:   sekret123
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
